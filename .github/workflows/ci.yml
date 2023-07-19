@@ -34,11 +34,13 @@ jobs:
         run: earthly --version
       - name: Run build conditionally
         run: |
+          # Update the ALLOW variable with your list of allowed satellite users (Github usernames)
+          # If a user does not match the list, the build will run without the satellite.
           ALLOW='ezeev,'
           echo $GITHUB_ACTOR
           if [[ $ALLOW =~ (^|,)$GITHUB_ACTOR($|,) ]]; then
             echo "$GITHUB_ACTOR is allowed. Running Earthly with Satellite."
-            earthly +build
+            earthly --sat $SATELLITE_NAME +build
           else
             echo "$GITHUB_ACTOR not allowed. Running Earthly without Satellite."
             earthly +build
