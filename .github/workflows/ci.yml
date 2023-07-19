@@ -19,9 +19,15 @@ jobs:
           version: v0.7.12
       - uses: actions/checkout@v2
       - name: Get git user
-        run: echo $GITHUB_ACTOR
-      - name: Get git user id
-        run: echo $GITHUB_ACTOR_ID
+        run: |
+          ALLOW='ezeev,'
+          echo $GITHUB_ACTOR
+          if [[ $ALLOW =~ (^|,)$GITHUB_ACTOR($|,) ]]; then
+            echo "Running Earthly with Satellite."
+          else
+            echo "Running Earthly without Satellite."
+            exit 1
+          fi
       - name: Put back the git branch into git (Earthly uses it for tagging)
         run: |
           branch=""
@@ -36,4 +42,4 @@ jobs:
       - name: Earthly version
         run: earthly --version
       - name: Run build
-        run: earthly --push +build
+        run: earthly +build
