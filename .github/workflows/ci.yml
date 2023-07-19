@@ -34,7 +34,7 @@ jobs:
         run: earthly --version
       - name: Run build conditionally
         run: |
-          ALLOW='johndoe,'
+          ALLOW='ezeev,'
           echo $GITHUB_ACTOR
           if [[ $ALLOW =~ (^|,)$GITHUB_ACTOR($|,) ]]; then
             echo "$GITHUB_ACTOR is allowed. Running Earthly with Satellite."
