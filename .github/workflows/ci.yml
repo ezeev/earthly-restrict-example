@@ -19,16 +19,6 @@ jobs:
         with:
           version: v0.7.12
       - uses: actions/checkout@v2
-      - name: Get git user
-        run: |
-          ALLOW='johndoe,'
-          echo $GITHUB_ACTOR
-          if [[ $ALLOW =~ (^|,)$GITHUB_ACTOR($|,) ]]; then
-            echo "$GITHUB_ACTOR is allowed. Running Earthly with Satellite."
-          else
-            echo "Running Earthly without Satellite."
-            exit 1
-          fi
       - name: Put back the git branch into git (Earthly uses it for tagging)
         run: |
           branch=""
@@ -42,5 +32,14 @@ jobs:
         run: docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_TOKEN"
       - name: Earthly version
         run: earthly --version
-      - name: Run build
-        run: earthly +build
+      - name: Run build conditionally
+        run: |
+          ALLOW='johndoe,'
+          echo $GITHUB_ACTOR
+          if [[ $ALLOW =~ (^|,)$GITHUB_ACTOR($|,) ]]; then
+            echo "$GITHUB_ACTOR is allowed. Running Earthly with Satellite."
+            earthly +build
+          else
+            echo "$GITHUB_ACTOR not allowed. Running Earthly without Satellite."
+            earthly +build
+          fi
