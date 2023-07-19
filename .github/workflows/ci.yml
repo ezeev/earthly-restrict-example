@@ -23,7 +23,7 @@ jobs:
           ALLOW='ezeev,'
           echo $GITHUB_ACTOR
           if [[ $ALLOW =~ (^|,)$GITHUB_ACTOR($|,) ]]; then
-            echo "Running Earthly with Satellite."
+            echo "$GITHUB_ACTOR is allowed. Running Earthly with Satellite."
           else
             echo "Running Earthly without Satellite."
             exit 1
