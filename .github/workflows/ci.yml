@@ -13,6 +13,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       EARTHLY_TOKEN: ${{ secrets.EARTHLY_TOKEN }}
+      EARTHLY_ORG: ${{ secrets.EARTHLY_ORG }}
       SATELLITE_NAME: ${{ secrets.SATELLITE_NAME }}
       FORCE_COLOR: 1
     steps:
@@ -41,7 +42,7 @@ jobs:
           echo $GITHUB_ACTOR
           if [[ $ALLOW =~ (^|,)$GITHUB_ACTOR($|,) ]]; then
             echo "$GITHUB_ACTOR is allowed. Running Earthly with Satellite."
-            earthly --sat $SATELLITE_NAME +build
+            earthly --sat $SATELLITE_NAME --org $EARTHLY_ORG +build
           else
             echo "$GITHUB_ACTOR not allowed. Running Earthly without Satellite."
             earthly +build
